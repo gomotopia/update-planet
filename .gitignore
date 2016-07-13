@@ -1,1 +1,40 @@
+## VIRTUAL ENVIRONMENT
 venv
+
+## PYTHON
+*.py[co]
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+develop-eggs
+.installed.cfg
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+
+## DJANGO
+*.log
+*.pot
+settings_local.py
+*.sqlite
+
+## VIM
+*.swp
+
+##PyCharm
+.idea
+
+# Sphinx
+docs/_build
+
+TODO
