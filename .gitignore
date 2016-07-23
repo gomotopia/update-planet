@@ -1,6 +1,3 @@
-## VIRTUAL ENVIRONMENT
-venv
-
 ## PYTHON
 *.py[co]
 
@@ -38,3 +35,4 @@ settings_local.py
 docs/_build
 
 TODO
+
