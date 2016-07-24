@@ -19,3 +19,16 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 ]
+
+'''
+from django.conf.urls import patterns, include, url
+
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = patterns('',
+    url(r'^', include('planet.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    # ... other url bits...
+)
+'''
