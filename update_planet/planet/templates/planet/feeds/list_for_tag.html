@@ -1,6 +1,6 @@
 {% extends "planet/base.html" %}
 {% load i18n pagination_tags %}
-{% load url from future %}
+{% url 'planet_tag_feed_list' %}
 
 {% block head_title %}{% trans "Feeds under tag" %} {{ tag|safe }}{% endblock %}
 
