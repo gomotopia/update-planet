@@ -13,16 +13,13 @@ from django.views.decorators.cache import cache_page
 from planet.feeds import PostFeed, AuthorFeed, AuthorTagFeed, TagFeed
 from planet.settings import PLANET_CONFIG
 from planet.sitemaps import planet_sitemaps_dict
-# from planet.views import FeedAddView, BlogListByUserView, BlogDeleteView
+from planet.views import FeedAddView, BlogListByUserView, BlogDeleteView
 
-'''
 if PLANET_CONFIG["LOGIN_REQUIRED_FOR_ADDING_FEED"]:
     url_add_feed_tuple = url(r'^feeds/add/$', login_required(FeedAddView.as_view()), name="planet_feed_add")
 else:
     url_add_feed_tuple = url(r'^feeds/add/$', FeedAddView.as_view(), name="planet_feed_add")
 
-'''
-'''
 urlpatterns = patterns('planet.views',
     url(r'^blogs/(?P<pk>\d+)/delete/$', login_required(BlogDeleteView.as_view()), name="planet_blog_delete"),
     url(r'^blogs/(?P<blog_id>\d+)/(?P<slug>[a-zA-Z0-9_\-]+)/$', "blog_detail", name="planet_blog_detail"),
@@ -74,5 +71,3 @@ urlpatterns += patterns('',
         cache_page(86400)(sitemaps_views.sitemap),
         {'sitemaps': planet_sitemaps_dict}, name='sitemaps'),
 )
-
-'''

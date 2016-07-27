@@ -19,7 +19,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = [
-#    url(r'^', include('planet.urls')),
+    url(r'^', include('planet.urls')),
     url(r'^admin/', admin.site.urls),
 ]
 
