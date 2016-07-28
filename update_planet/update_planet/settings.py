@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.sitemaps',
     'tagging',
-    'pagination'
+    'pagination',
+    'pinax_theme_bootstrap'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -61,7 +63,7 @@ ROOT_URLCONF = 'update_planet.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS':  '/ ', # [os.path.join(BASE_DIR,'templates')],
+        'DIRS':  [os.path.join(BASE_DIR,'planet/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
