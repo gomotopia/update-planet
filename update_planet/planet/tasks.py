@@ -108,6 +108,9 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
         blog_url = document.feed.get("link")
         rights = document.feed.get("rights") or document.feed.get("license")
         info = document.feed.get("info")
+
+        print ("/////////",document.feed)
+
         try:
             guid = unicode(md5(document.feed.get("link")).hexdigest())
         except NameError:
