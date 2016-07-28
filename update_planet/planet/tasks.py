@@ -109,10 +109,8 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
         rights = document.feed.get("rights") or document.feed.get("license")
         info = document.feed.get("info")
 
-        print ("/////////",document.feed)
-
         try:
-            guid = unicode(md5(document.feed.get("link")).hexdigest())
+            guid = str(md5(document.feed.get("link")).hexdigest())
         except NameError:
             guid = md5(document.feed.get("link").encode('utf-8')).hexdigest()
         image_url = document.feed.get("image", {}).get("href")
@@ -207,7 +205,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                     "content", [{"value": ""}])[0]["value"]
                 comments_url = entry.get("comments")
                 date_modified = entry.get("updated_parsed") or\
-                    entry.get("published_parsed")
+                     entry.get("published_parsed")
                 try:
                     date_modified = datetime.fromtimestamp(
                         time.mktime(date_modified))
@@ -220,6 +218,16 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                     post = Post(title=title, url=url, guid=guid, content=content,
                                 comments_url=comments_url, date_modified=date_modified,
                                 feed=planet_feed)
+
+                    '''
+                       Filter post.title HERE!
+
+                       Create new table of keywords to filter with!
+
+                    '''
+
+
+
                     # To have the feed entry in the pre_save signal
                     post.entry = entry
                     post.save()
