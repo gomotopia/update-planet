@@ -32,7 +32,6 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
-    'planet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +43,8 @@ INSTALLED_APPS = [
     'tagging',
     'pagination',
     'pinax_theme_bootstrap',
-    'bootstrapform'
+    'bootstrapform',
+    'planet'
 ]
 
 MIDDLEWARE_CLASSES = [

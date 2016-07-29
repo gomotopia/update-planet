@@ -5,6 +5,8 @@ from django.contrib import admin
 from planet.models import (Blog, Generator, Feed, FeedLink, Post, PostLink,
     Author, PostAuthorData, Enclosure, Category)
 
+from django.contrib.contenttypes.admin import GenericTabularInline
+from tagging.models import Tag
 
 class PostLinkAdmin(admin.ModelAdmin):
     list_display = ("title", "rel", "mime_type", "post", "link")
@@ -44,13 +46,16 @@ class EnclosureInline(admin.StackedInline):
     model = Enclosure
     extra = 0
 
+class TabInline(GenericTabularInline):
+    model = Tag
+    extra = 0
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ("title", "feed", "guid", "date_created", "date_modified")
     list_filter = ("feed", )
     search_fields = ["title", "feed__blog__title"]
 
-admin.site.register(Post, PostAdmin, inlines=[EnclosureInline])
-
+admin.site.register(Post, PostAdmin, inlines=[TabInline,EnclosureInline])
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ("title", "url", "date_created")
