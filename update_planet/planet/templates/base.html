@@ -48,7 +48,7 @@
                                     <span class="icon-bar"></span>
                                 </button>
                                 {% block site_brand %}
-                                    <a class="brand" href="/">{{ SITE_NAME }}</a>
+                                    <a class="navbar-brand" href="/">{{ SITE_NAME }}</a>
                                 {% endblock %}
                             </div>
 
@@ -84,12 +84,12 @@
                         {% endblock %}
                     </div>
                     <div class="row">
-                        <div class="span2 columns">
-                            {% block right_column %}
+                        <div class="col-md-10 columns">
+                            {% block content %}
                             {% endblock %}
                         </div>
-                        <div class="span10 columns">
-                            {% block content %}
+                        <div class="col-md-2 columns">
+                            {% block right_column %}
                             {% endblock %}
                         </div>
                     </div>

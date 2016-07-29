@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'tagging',
     'pagination',
-    'pinax_theme_bootstrap'
+    'pinax_theme_bootstrap',
+    'bootstrapform'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -76,6 +77,7 @@ TEMPLATES = [
                 'django.core.context_processors.static',
                 'django.core.context_processors.tz',
                 'planet.context_processors.context',
+                'pinax_theme_bootstrap.context_processors.theme',
             ],
         },
     },
