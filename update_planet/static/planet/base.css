@@ -1,0 +1,145 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic);body
+* { font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif; }
+footer .row .col-md-2 { background-color: transparent; color: #FFFF; }
+footer .row h4 { color: #EDEDED; }
+footer .row ul { list-style-type: none; margin: 0; padding: 0; }
+footer p { margin: 1em; color: #FFF; }
+footer ul li { color: #FFF; padding: 2px 0; }
+
+body .row .col-md-2 .nav > li > a:hover, body .row .col-md-2 .nav > li > a:focus {
+  color: rgb(35, 79, 50);
+  background-color: rgb(224, 255, 184);
+}
+
+.breadcrumb { background-color: #FFF; }
+.breadcrumb li span.divider { display: none; }
+
+body { padding-top: 55px !important; background: url("../planet/images/wavegrid.png") repeat scroll 0 0 transparent; }
+
+span.rss { /* colors taken from djangoproject.com stylesheet */
+    font: bold 10px Verdana, sans-serif;
+    padding: 0 .2em; border: 1px solid;
+    text-decoration: none;
+    background: #f60;
+    color: #fff;
+    border-color: #ffc8a4 #7d3302 #3f1a01 #ff9a57;
+    margin: 0 3px 0 0;
+    vertical-align: middle;
+}
+a.rss:hover, a.rss:link, a.rss:visited {
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+div.box {
+  margin: 0.8em 0 0;
+}
+
+/* django theme! */
+body .navbar-inverse  {
+  background: none repeat scroll 0% 0% rgb(9, 46, 32);
+  border-color: rgb(9, 46, 32);;
+}
+body .navbar-inverse .navbar-inner a {
+  color: #FFF;
+}
+
+body strong, body .navbar-inverse a.navbar-brand {
+  color: rgb(146, 204, 71);
+  font-weight: bold;
+}
+
+body .navbar-inverse a.navbar-brand:hover {
+  color: rgb(224, 255, 184);
+  background-color: transparent;
+}
+
+body a {
+  color: rgb(171, 86, 3);
+}
+
+body a:hover {
+  color: rgb(35, 79, 50);
+  background-color: rgb(224, 255, 184);
+  text-decoration: none !important;
+}
+
+body h1 a:hover, body h2 a:hover, body h3 a:hover, body h4 a:hover, body h5 a:hover {
+  color: rgb(35, 79, 50);
+  background-color: rgb(224, 255, 184);
+  text-decoration: none !important;
+}
+
+body h1, body h2, body h3, body h4, body h5 {
+  color: rgb(72, 120, 88);
+  background-color: transparent;
+  margin-top: 10px;
+}
+
+span.label {
+  color: rgb(224, 255, 184);
+  background-color: rgb(35, 79, 50);
+}
+
+body .row .col-md-2, footer {
+  background: rgb(35, 79, 50);
+  color: #FFF;
+  padding: 15px;
+  margin: 0 0;
+  border-radius: 4px;
+}
+
+body .row .col-md-2 a, footer a {
+  color: rgb(255, 199, 87);
+}
+
+body .row .col-md-2 a.tag:hover {
+  color: rgb(35, 79, 50);
+  background-color: rgb(224, 255, 184);
+  text-decoration: none !important;
+}
+
+body span.label a:hover {
+  background-color: transparent;
+  text-decoration: none !important;
+  color: rgb(224, 255, 184);
+}
+
+footer .col-md-2 ul li a:hover {
+  color: rgb(224, 255, 184);
+  background-color: transparent;
+}
+
+body .row .col-md-2 h4, body .row .col-md-2 h5, footer h4, footer h5 {
+  color: rgb(146, 204, 71);
+  text-transform: uppercase;
+}
+
+body .nav-list {
+  padding: 0 0 15px;
+}
+
+footer .row {
+  margin-left: -29px !important;
+}
+
+body .row .col-md-2 div#mc_embed_signup {
+  background-color: transparent !important;
+}
+
+div.post.short h2 {
+  font-size: 1.5em;
+  padding: 0;
+  margin: 0;
+}
+
+.pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
+  background: none repeat scroll 0% 0% rgb(35, 79, 50);
+  border-color: rgb(35, 79, 50);
+}
+.pagination > li > a, .pagination > li > span {
+  color: rgb(35, 79, 50);
+}
+.pagination > li > a:hover, .pagination > li > span:focus {
+  color: rgb(146, 204, 71);
+}
