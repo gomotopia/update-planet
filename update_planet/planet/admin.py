@@ -55,6 +55,10 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ("feed", )
     search_fields = ["title", "feed__blog__title"]
 
+    class Media:
+        js = ( '/static/admin/js/dynamic_inlines_with_sort.js',)
+        css = { 'all' : ['/static/admin/css/dynamic_inlines_with_sort.css'], }
+
 admin.site.register(Post, PostAdmin, inlines=[TaggedItemInline,EnclosureInline])
 
 class BlogAdmin(admin.ModelAdmin):
