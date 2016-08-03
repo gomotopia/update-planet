@@ -77,7 +77,7 @@ body h1, body h2, body h3, body h4, body h5 {
 }
 
 span.label {
-  color: rgb(224, 255, 184);
+  /* color: rgb(224, 255, 184); */
   background-color: rgb(35, 79, 50);
 }
 
@@ -99,10 +99,14 @@ body .row .col-md-2 a.tag:hover {
   text-decoration: none !important;
 }
 
+body span.label a {
+    color: rgb(224, 255, 184);
+}
+
 body span.label a:hover {
   background-color: transparent;
   text-decoration: none !important;
-  color: rgb(224, 255, 184);
+  /* color: rgb(224, 255, 184); */
 }
 
 footer .col-md-2 ul li a:hover {

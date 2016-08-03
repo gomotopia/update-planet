@@ -1,11 +1,19 @@
 {% load i18n %}
 
+{% for enclosure in post.enclosure_set.all %}
+    {% if "image" in enclosure.mime_type %}
+        <img src="{{ enclosure.link }}" alt="" /></a>
+    {% endif %}
+{% endfor %}
+
+
 <h2>
   <a href="{{ post.url }}" title="{% trans 'Read ' %} {{ post.title|safe }}"
     onclick="javascript: _gaq.push(['_trackEvent', 'Title Link', 'Click', 'long-content']);">
         {{ post.title|striptags|safe }}
   </a>
 </h2>
+
 <p class="content">
     <span class="date">{{ post.date_modified|date:"M d Y" }}</span> &#9884
     <a href="{{ post.get_absolute_url }}" title="{% trans 'Read an archived version of' %} {{ post.title|safe }}"
@@ -19,7 +27,8 @@
       {% endfor %}
     {% endif %}
     <div>
-      {{ post.content|safe }}
+
+      {# {{ post.content|safe }} #}
     </div>
 </p>
 <br/>
