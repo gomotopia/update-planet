@@ -58,6 +58,7 @@ class Blog(models.Model):
     url = models.URLField(_("Url"), unique=True, db_index=True)
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     owner = models.ForeignKey(_get_user_model(), null=True, blank=True)
+    # type (blog, tv station, elsewhere, newspaper, academic, organization, etc)
 
     site_objects = BlogManager()
     objects = models.Manager()
@@ -269,6 +270,8 @@ class Post(models.Model):
     content = models.TextField(_("Content"))
     comments_url = models.URLField(_("Comments URL"), blank=True, null=True)
 
+    primary_tag = models.ForeignKey("tagging.Tag", null=True)
+
     date_modified = models.DateTimeField(_("Date modified"), null=True,
         blank=True, db_index=True)
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
@@ -398,3 +401,18 @@ class Enclosure(models.Model):
     def __str__(self):
         return "{} [{}] ({})".format(self.link, self.mime_type, self.post)
 
+'''
+class TagInfo(models.Model):
+    """
+    Associates Tag with Other Attributes
+    """
+    tag = models.OneToOneField(
+        Tag,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+
+    # color
+    # priority
+    # type (name? entity? organization? topic?)
+'''

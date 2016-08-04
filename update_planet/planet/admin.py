@@ -6,7 +6,7 @@ from planet.models import (Blog, Generator, Feed, FeedLink, Post, PostLink,
     Author, PostAuthorData, Enclosure, Category)
 
 from django.contrib.contenttypes.admin import GenericTabularInline
-from tagging.models import TaggedItem
+from tagging.models import TaggedItem, Tag
 
 class PostLinkAdmin(admin.ModelAdmin):
     list_display = ("title", "rel", "mime_type", "post", "link")
@@ -51,13 +51,23 @@ class TaggedItemInline(GenericTabularInline):
     extra = 0
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("title", "feed", "guid", "date_created", "date_modified")
+    list_display = ("title", "feed", "guid", "date_created", "date_modified", "primary_tag")
     list_filter = ("feed", )
+    #  list_filter = ("primary_tag",admin.RelatedOnlyFieldListFilter)
     search_fields = ["title", "feed__blog__title"]
 
     class Media:
         js = ( '/static/admin/js/dynamic_inlines_with_sort.js',)
         css = { 'all' : ['/static/admin/css/dynamic_inlines_with_sort.css'], }
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(PostAdmin,self).get_form(request, obj, **kwargs)
+
+        # form class is created per request by modelform_factory function
+        # so it's safe to modify
+        #we modify the the queryset
+        form.base_fields['primary_tag'].queryset = obj.tags
+        return form
 
 admin.site.register(Post, PostAdmin, inlines=[TaggedItemInline,EnclosureInline])
 
