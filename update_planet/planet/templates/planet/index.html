@@ -19,13 +19,78 @@
 {% block posts_class %}class="active"{% endblock %}
 
 {% block content %}
-    <h1>{% trans "Recent Posts on New Orleans Tourism and related topics" %}</h1>
-    {% autopaginate posts 15 %}
-    {% for post in posts %}
-        <div class="post">
-            {% post_details post %}
-        </div>
-    {% endfor %}
 
-    {% paginate %}
+{% comment %}
+
+row one topblock (10)
+two smallblocks (5) (5)
+simple list of 5 latest stories [latest others:]
+
+find two most important tags
+
+* [tag] date Aug. 3, aslfkjasdlf source
+
+tags (5) (5) w/ color
+very simple list of articles
+
+* adfasdf source
+
+
+
+{% endcomment %}
+
+
+
+
+
+    <h1>{% trans "Recent Posts on New Orleans Tourism and related topics" %}</h1>
+
+  <div class="row">
+        <div class="col-md-10 columns">
+            {% post_details important_posts.0 %}
+        </div>
+</div>
+
+<div class="row">
+    <div class = "col-md-5 columns">
+
+
+{% for enclosure in important_posts.1.enclosure_set.all %}
+    {% if "image" in enclosure.mime_type %}
+        <img src="{{ enclosure.link }}" alt="" /></a>
+    {% endif %}
+{% endfor %}
+
+
+<h4>
+  <a href="{{ post.url }}" title="{% trans 'Read ' %} {{ post.title|safe }}"
+    onclick="javascript: _gaq.push(['_trackEvent', 'Title Link', 'Click', 'long-content']);">
+        {{ important_posts.1.title|striptags|safe }}
+  </a>
+
+
+</h2>
+
+
+    </div>
+    <div class = "col-md-5 columns">
+
+
+{% for enclosure in important_posts.2.enclosure_set.all %}
+    {% if "image" in enclosure.mime_type %}
+        <img src="{{ enclosure.link }}" alt="" /></a>
+    {% endif %}
+{% endfor %}
+
+
+<h4>
+  <a href="{{ post.url }}" title="{% trans 'Read ' %} {{ post.title|safe }}"
+    onclick="javascript: _gaq.push(['_trackEvent', 'Title Link', 'Click', 'long-content']);">
+        {{ important_posts.2.title|striptags|safe }}
+  </a>
+
+
+    </div>
+</div>
+
 {% endblock %}

@@ -17,17 +17,22 @@ from tagging.models import Tag, TaggedItem
 
 
 def index(request):
-    posts = Post.site_objects.all().order_by("-date_modified")
+    # posts = Post.site_objects.all().order_by("-date_modified")
 
 
     '''
         already published = []
 
         main articles
-            priority and numdays
-            priorty - numdays = rank
+            # priority and numdays
+            # priorty - numdays = rank
+    '''
+    important_posts = Post.site_objects.order_by('-display_order')[:8]
 
 
+
+
+    '''
             1/then 2 or 3
 
         newest posts
@@ -38,18 +43,13 @@ def index(request):
             -shows tag / article
 
         other news (5) each
-            tag
+            ** tag
                 by priority - numdays since last, including latest posts,
                 but then dont display latest posts.
 
     '''
 
-
-
-
-
-
-    return render_to_response("planet/index.html", {"posts": posts},
+    return render_to_response("planet/index.html", {"important_posts": important_posts},
         context_instance=RequestContext(request))
 
 

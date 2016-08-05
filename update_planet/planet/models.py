@@ -32,7 +32,7 @@ try:
 except ImportError:
     from tagging.registry import register
 
-from tagging.models import Tag
+from tagging.models import Tag, TaggedItem
 
 from planet.managers import (FeedManager, AuthorManager, BlogManager,
     PostManager, GeneratorManager, PostLinkManager, FeedLinkManager,
@@ -278,16 +278,14 @@ class Post(models.Model):
         blank=True, db_index=True)
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
 
-    @property
-    def age(self):
-        return (datetime.now(pytz.utc) - self.date_modified).days
-
+    age = models.IntegerField(_("Age"), default=0)
     priority = models.IntegerField(_("Priority"), default=0)
+    display_order = models.IntegerField(_("Display Order"), default=0)
 
-    @property
-    def display_order(self):
-        return self.priority - self.age
-
+    def save(self):
+        self.age = (datetime.now(pytz.utc) - self.date_modified).days
+        self.display_order = self.priority - self.age
+        super(Post, self).save()
 
     site_objects = PostManager()
     objects = models.Manager()
@@ -417,7 +415,6 @@ class Enclosure(models.Model):
     def __str__(self):
         return "{} [{}] ({})".format(self.link, self.mime_type, self.post)
 
-'''
 class TagInfo(models.Model):
     """
     Associates Tag with Other Attributes
@@ -428,7 +425,27 @@ class TagInfo(models.Model):
         primary_key=True,
     )
 
+    class Meta:
+        verbose_name = _("Tag Info")
+        verbose_name_plural = _("Tag Infos")
+        ordering = ("tag", "priority")
+        unique_together = ("tag", "priority")
+
+    priority =  models.IntegerField(_("Priority"), default=0)
+    date_modified = models.DateTimeField(_("Date modified"), null=True,
+        blank=True, db_index=True)
+    age =  age = models.IntegerField(_("Age"), default=0)
+    display_order = models.IntegerField(_("Display Order"), default=0)
+
+    def save(self):
+        self.date_modified = TaggedItem.objects.get_by_model(Post, self.tag) \
+            .order_by('-date_modified')[0].date_modified
+        self.age = (datetime.now(pytz.utc) - self.date_modified).days
+        self.display_order = self.priority - self.age
+        super(TagInfo, self).save()
+
+
     # color
     # priority
     # type (name? entity? organization? topic?)
-'''
+

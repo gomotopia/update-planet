@@ -3,7 +3,7 @@
 from django.contrib import admin
 
 from planet.models import (Blog, Generator, Feed, FeedLink, Post, PostLink,
-    Author, PostAuthorData, Enclosure, Category)
+    Author, PostAuthorData, Enclosure, Category, TagInfo)
 
 from django.contrib.contenttypes.admin import GenericTabularInline
 from tagging.models import TaggedItem, Tag
@@ -96,3 +96,10 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ["title"]
 
 admin.site.register(Category, CategoryAdmin)
+
+class TagInfoAdmin(admin.ModelAdmin):
+    list_display = ("tag","priority","date_modified")
+    search_fields = ["tag","date_modified"]
+
+admin.site.register(TagInfo, TagInfoAdmin)
+
