@@ -19,6 +19,36 @@ from tagging.models import Tag, TaggedItem
 def index(request):
     posts = Post.site_objects.all().order_by("-date_modified")
 
+
+    '''
+        already published = []
+
+        main articles
+            priority and numdays
+            priorty - numdays = rank
+
+
+            1/then 2 or 3
+
+        newest posts
+            get posts, reverse order of date, remove already published
+            cut to latest 5
+            add 5 to already published
+
+            -shows tag / article
+
+        other news (5) each
+            tag
+                by priority - numdays since last, including latest posts,
+                but then dont display latest posts.
+
+    '''
+
+
+
+
+
+
     return render_to_response("planet/index.html", {"posts": posts},
         context_instance=RequestContext(request))
 

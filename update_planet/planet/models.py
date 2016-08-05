@@ -16,6 +16,7 @@ from django.utils.encoding import python_2_unicode_compatible
 
 import feedparser
 from datetime import datetime
+import pytz
 from time import mktime, struct_time
 
 from django.db import models
@@ -262,6 +263,7 @@ class Post(models.Model):
     """
     A feed contains a collection of posts. This model stores them.
     """
+
     feed = models.ForeignKey("planet.Feed", null=False, blank=False)
     title = models.CharField(_("Title"), max_length=255, db_index=True)
     authors = models.ManyToManyField("planet.Author", through=PostAuthorData)
@@ -275,6 +277,17 @@ class Post(models.Model):
     date_modified = models.DateTimeField(_("Date modified"), null=True,
         blank=True, db_index=True)
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
+
+    @property
+    def age(self):
+        return (datetime.now(pytz.utc) - self.date_modified).days
+
+    priority = models.IntegerField(_("Priority"), default=0)
+
+    @property
+    def display_order(self):
+        return self.priority - self.age
+
 
     site_objects = PostManager()
     objects = models.Manager()
@@ -294,6 +307,9 @@ class Post(models.Model):
 
     def get_slug(self):
         return slugify(self.title) or "no-title"
+
+
+
 
 # each Post object now will have got a .tags attribute!
 register(Post)

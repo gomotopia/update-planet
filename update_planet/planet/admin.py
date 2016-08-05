@@ -55,6 +55,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ("feed", )
     #  list_filter = ("primary_tag",admin.RelatedOnlyFieldListFilter)
     search_fields = ["title", "feed__blog__title"]
+    readonly_fields=('age', 'display_order')
 
     class Media:
         js = ( '/static/admin/js/dynamic_inlines_with_sort.js',)
