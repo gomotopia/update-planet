@@ -43,16 +43,16 @@ very simple list of articles
 
 
 
-    <h1>{% trans "Recent Posts on New Orleans Tourism and related topics" %}</h1>
+    <h1>The Latest on New Orleans Tourism</h1>
 
   <div class="row">
         <div class="col-md-10 columns">
-            {% post_details important_posts.0 %}
+            {% post_most important_posts.0 %}
         </div>
 </div>
 
 <div class="row">
-    <div class = "col-md-5 columns">
+    <div class = "col-md-6 columns">
 
 
 {% for enclosure in important_posts.1.enclosure_set.all %}
@@ -73,7 +73,7 @@ very simple list of articles
 
 
     </div>
-    <div class = "col-md-5 columns">
+    <div class = "col-md-6 columns highlight">
 
 
 {% for enclosure in important_posts.2.enclosure_set.all %}

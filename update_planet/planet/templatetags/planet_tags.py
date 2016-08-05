@@ -75,6 +75,14 @@ def post_full_details(post):
     """
     return {"post": post}
 
+@register.inclusion_tag("planet/posts/most.html")
+def post_most(post):
+    """
+    Displays full info about a post: title, date, feed, authors and tags,
+    and it also displays external links to post and blog.
+    """
+    return {"post": post}
+
 
 @register.inclusion_tag("planet/tags/blocks/feeds_cloud.html")
 def cloud_for_feed(feed, min_count=PLANET_CONFIG["FEED_TAG_CLOUD_MIN_COUNT"]):
