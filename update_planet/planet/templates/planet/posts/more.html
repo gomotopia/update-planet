@@ -11,38 +11,18 @@
             {% endfor %}
         </div>
         <div class="col-md-6 columns">
-            {% if post.primary_tag %} <h4>{{ post.primary_tag}}</h4> {% endif %}
-            <h3>
+            {% if post.primary_tag %} <h5>{{ post.primary_tag}}</h5> {% endif %}
+            <h4>
                   <a href="{{ post.url }}" target="_blank" title="{% trans 'Read ' %} {{ post.title|safe }}"
                     onclick="javascript: _gaq.push(['_trackEvent', 'Title Link', 'Click', 'long-content']);">
                     {{ post.title|striptags|safe }}
                 </a>
-            </h3>
-            <h5>
+            </h4>
+            <h6>
                 <div class="date">{{ post.date_modified|date:"M d Y" }}</div> <a href="{{ post.feed.blog.get_absolute_url }}" title="{% trans 'See all posts for this blopg' %}">
-                    {{ post.feed.blog.title }}
+                    {{ post.feed.blog.short_name }}
                 </a>
-            </h5>
-{{ post.content|safe }}
-<p/>
-<p class="tags list">
-    {% for tag in post.tags.all %}
-        <span class="label"><a href="{% url 'planet_tag_detail' tag.name %}" title="Tag">{{ tag.name }}</a></span>
-    {% endfor %}
-</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
+            </h6>
         </div>
 </div>
 

@@ -60,6 +60,7 @@ class Blog(models.Model):
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
     owner = models.ForeignKey(_get_user_model(), null=True, blank=True)
     # type (blog, tv station, elsewhere, newspaper, academic, organization, etc)
+    short_name = models.CharField(_("Short Name"), max_length=50)
 
     site_objects = BlogManager()
     objects = models.Manager()

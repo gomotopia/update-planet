@@ -137,7 +137,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
             owner = None
 
         blog, created = Blog.objects.get_or_create(
-            url=blog_url, defaults={"title": title}, owner=owner)
+            url=blog_url, defaults={"title": title}, owner=owner, shortname = urlparse(blog_url).netloc)
 
         generator_dict = document.feed.get("generator_detail", {})
 
