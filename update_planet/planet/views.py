@@ -19,7 +19,7 @@ from tagging.models import Tag, TaggedItem
 def index(request):
     posts = Post.site_objects.all().order_by("-date_modified")
 
-    return render_to_response("planet/posts/list.html", {"posts": posts},
+    return render_to_response("planet/index.html", {"posts": posts},
         context_instance=RequestContext(request))
 
 
