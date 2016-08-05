@@ -1,23 +1,48 @@
 {% load i18n %}
 
 <div class="row">
-        <div class="col-md-8 columns">
+
+
+        <div class="col-md-6 columns">
             {% for enclosure in post.enclosure_set.all %}
                 {% if "image" in enclosure.mime_type %}
                     <img src="{{ enclosure.link }}" alt="" /></a>
                 {% endif %}
             {% endfor %}
         </div>
-        <div class="col-md-4 columns">
+        <div class="col-md-6 columns">
             {% if post.primary_tag %} <h4>{{ post.primary_tag}}</h4> {% endif %}
             <h3>
-                  <a href="{{ post.url }}" title="{% trans 'Read ' %} {{ post.title|safe }}"
+                  <a href="{{ post.url }}" target="_blank" title="{% trans 'Read ' %} {{ post.title|safe }}"
                     onclick="javascript: _gaq.push(['_trackEvent', 'Title Link', 'Click', 'long-content']);">
                     {{ post.title|striptags|safe }}
                 </a>
             </h3>
-            <h5><div class="date">{{ post.date_modified|date:"M d Y" }}</div></h5>
+            <h5>
+                <div class="date">{{ post.date_modified|date:"M d Y" }}</div> <a href="{{ post.feed.blog.get_absolute_url }}" title="{% trans 'See all posts for this blopg' %}">
+                    {{ post.feed.blog.title }}
+                </a>
+            </h5>
+{{ post.content|safe }}
+<p class="tags list">
+    {% for tag in post.tags.all %}
+        <span class="label"><a href="{% url 'planet_tag_detail' tag.name %}" title="Tag">{{ tag.name }}</a></span>
+    {% endfor %}
+</p>
 
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
 </div>
 
 

@@ -148,7 +148,7 @@ div.post.short h2 {
   color: rgb(146, 204, 71);
 }
 
-/* my idea   */
+/* my ideas   */
 
 img
 {
@@ -166,6 +166,8 @@ img
   display:         flex;
 
 }
+
+.top-buffer { margin-top:20px; }
 
 /*
 [class*="col-"] {
