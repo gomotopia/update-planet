@@ -23,13 +23,24 @@ def index(request):
     '''
         already published = []
 
+        Post.objects.exclude(id__in=toex).order_by("-date_modified")[:3]
+
         main articles
+
+           > make priority related to date_delta
+           > date_modified does not compute
+           > priority does (days ahead)
+           > spit out by new priority_order date
+
+
+
             # priority and numdays
             # priorty - numdays = rank
+
+
     '''
-    important_posts = Post.site_objects.order_by('-display_order')[:8]
 
-
+    # MyObject.objects.filter(time__gte=datetime.now()).exclude(id__in=object_id_list)
 
 
     '''
@@ -49,7 +60,14 @@ def index(request):
 
     '''
 
-    return render_to_response("planet/index.html", {"important_posts": important_posts},
+    important_posts = Post.site_objects.order_by('-display_order')[:10]
+
+    # first
+    first = important_posts[0]
+    important = important_posts[1:4]
+    morenews = important_posts[5:10]
+
+    return render_to_response("planet/index.html", {"first": first, "important": important, "morenews": morenews},
         context_instance=RequestContext(request))
 
 

@@ -90,6 +90,13 @@ def post_more(post):
     """
     return {"post": post}
 
+@register.inclusion_tag("planet/posts/short.html")
+def post_short(post):
+    """
+    Displays small picture and primary tag, headline, source, date
+    """
+    return {"post": post}
+
 @register.inclusion_tag("planet/posts/most.html")
 def post_most(post):
     """

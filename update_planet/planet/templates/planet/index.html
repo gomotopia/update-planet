@@ -44,16 +44,26 @@ very simple list of articles
 <div class="row">
 
     <div class="col-md-12 columns">
-        {% post_most important_posts.0 %}
+        {% post_most first.0 %}
     </div>
 </div>
 
 <h2>Other Important Shit</h2>
 
 <div class="row top-buffer">
-
-    <div class = "col-md-6 columns"> {% post_more important_posts.1 %} </div>
-    <div class = "col-md-6 columns"> {% post_more important_posts.2 %} </div>
+    <div class = "col-md-4 columns"> {% post_more important.0 %} </div>
+    <div class = "col-md-4 columns"> {% post_more important.1 %} </div>
+    <div class = "col-md-4 columns"> {% post_more important.2 %} </div>
 </div>
+
+<div class="row top-buffer">
+    <ul>
+        {% for mp in morenews %}
+            {% post_short mp %}
+        {% endfor %}
+    </ul>
+
+</div>
+
 
 {% endblock %}
