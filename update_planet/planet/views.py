@@ -58,6 +58,26 @@ def index(request):
                 by priority - numdays since last, including latest posts,
                 but then dont display latest posts.
 
+        try:
+            get latest posts
+            get tags of latest posts
+            order by number tagged by number tags = Tag.objects.usage_for_model(Widget, counts=True)
+
+        or:
+            get primary tags count
+            pick top
+
+        or:
+            times number is used in the last week
+            ie:
+                get all posts from the last week
+                pick highest two tags
+
+        or:
+            set in admin!!!
+
+        design and use: taginfo
+
     '''
 
     important_posts = Post.site_objects.order_by('-display_order')[:10]
