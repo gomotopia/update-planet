@@ -59,6 +59,18 @@ body strong, body .navbar-inverse a.navbar-brand {
   font-family:"Turnpike";
 }
 
+@media screen and (min-width: 480px)
+{
+    #short-brand { display: none; }
+    #long-brand { display: span; }
+}
+
+@media screen and (max-width: 480px)
+{
+    #short-brand { display: span; }
+    #long-brand { display: none; }
+}
+
 body .navbar-inverse a.navbar-brand:hover {
   color: rgb(224, 255, 184);
   background-color: transparent;

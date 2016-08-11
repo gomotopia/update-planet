@@ -50,8 +50,12 @@
                                     <span class="icon-bar"></span>
                                     <span class="icon-bar"></span>
                                 </button>
+
+
                                 {% block site_brand %}
-                                    <a class="navbar-brand" href="/">{{ SITE_NAME }}</a>
+                                    <a class="navbar-brand" id="short-brand" href="/">NOLA Updates</a>
+                                    <a class="navbar-brand" id="long-brand" href="/">New Orleans Tourism Updates</a>
+                                    {% comment %}<a class="navbar-brand" href="/">{{ SITE_NAME }}</a>{% endcomment %}
                                 {% endblock %}
                             </div>
 

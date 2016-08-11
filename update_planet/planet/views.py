@@ -67,6 +67,9 @@ def index(request):
     important = important_posts[1:4]
     morenews = important_posts[5:10]
 
+
+
+
     return render_to_response("planet/index.html", {"first": first, "important": important, "morenews": morenews},
         context_instance=RequestContext(request))
 

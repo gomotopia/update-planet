@@ -1,5 +1,14 @@
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic);body
-* { font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif; }
+@font-face
+{
+    font-family: 'Turnpike';
+    src: url('./fonts/Turnpike.ttf');
+}
+
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic);
+@import url(http://fonts.googleapis.com/css?family=Roboto+Slab:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic);
+
+body * { font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif; }
 footer .row .col-md-2 { background-color: transparent; color: #FFFF; }
 footer .row h4 { color: #EDEDED; }
 footer .row ul { list-style-type: none; margin: 0; padding: 0; }
@@ -47,6 +56,19 @@ body .navbar-inverse .navbar-inner a {
 body strong, body .navbar-inverse a.navbar-brand {
   color: rgb(146, 204, 71);
   font-weight: bold;
+  font-family:"Turnpike";
+}
+
+@media screen and (min-width: 480px)
+{
+    #short-brand { display: none; }
+    #long-brand { display: span; }
+}
+
+@media screen and (max-width: 480px)
+{
+    #short-brand { display: span; }
+    #long-brand { display: none; }
 }
 
 body .navbar-inverse a.navbar-brand:hover {
@@ -74,6 +96,19 @@ body h1, body h2, body h3, body h4, body h5 {
   color: rgb(72, 120, 88);
   background-color: transparent;
   margin-top: 10px;
+}
+
+body h1, body h2{
+  font-family: "Turnpike", monospace;
+}
+
+body h3, body h4, body h3 a, body h4 a{
+font-family: "Roboto Slab", serif;
+}
+
+body h5, body h6, body h5 a, body h6 a
+{
+ font-family: "Open Sans", sans-serif;
 }
 
 span.label {
@@ -116,7 +151,6 @@ footer .col-md-2 ul li a:hover {
 
 body .row .col-md-2 h4, body .row .col-md-2 h5, footer h4, footer h5 {
   color: rgb(146, 204, 71);
-  text-transform: uppercase;
 }
 
 body .nav-list {
@@ -148,7 +182,7 @@ div.post.short h2 {
   color: rgb(146, 204, 71);
 }
 
-/* my idea   */
+/* my ideas   */
 
 img
 {

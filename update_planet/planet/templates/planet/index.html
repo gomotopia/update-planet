@@ -3,7 +3,6 @@
 {# {% url 'planet_post_list' %} #}
 
 {% block head_title %}
-  {# {% trans 'django-planet: django blog news aggregator' %}{{ block.super }} #}
   New Orleans Tourism Updates
 {% endblock %}
 
@@ -55,23 +54,42 @@ very simple list of articles
     <div class = "col-md-4 columns"> {% post_more important.2 %} </div>
 </div>
 
-<h3>The Latest</h3>
+<h2>The Latest</h2>
 
 <div class="top-buffer">
 
-{% regroup morenews by date_modified|date:"Y-m-d" as morenews_ranked %}
+{% regroup morenews by date_modified|date:"D N j" as morenews_ranked %}
 
-<ul>
-    {% for country in morenews_ranked %}
-    <li>{{ country.grouper }}
-    <ul>
-        {% for item in country.list %}
-          <li>{% post_short item %}</li>
-        {% endfor %}
-    </ul>
-    </li>
+{% for country in morenews_ranked %}
+        <h3><span class="date">{{ country.grouper }}</span></h3>
+    {% for item in country.list %}
+      {% post_short item %}
     {% endfor %}
-</ul>
+    <br>
+{% endfor %}
+
+<h2>Relevant Topics</h2>
+
+<div class="row">
+    <div class="col-md-6 columns">
+        <h3>Tag 1</h3>
+    </div>
+    <div class="col-md-6 columns">
+        <h3>Tag 2</h3>
+    </div>
+</div>
+
+{% for country in morenews_ranked %}
+        <div class="col-md-6 columns"><span class="date">{{ country.grouper }}</span></h3>
+    {% for item in country.list %}
+      {% post_short item %}
+    {% endfor %}
+    </div>
+    <br>
+{% endfor %}
+
+
+
 
 {% comment %}
     {% for mp in morenews %}
@@ -81,3 +99,10 @@ very simple list of articles
 </div>
 
 {% endblock %}
+
+
+
+
+
+
+
