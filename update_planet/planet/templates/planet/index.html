@@ -38,13 +38,12 @@ very simple list of articles
 
 
 
-<h1>The Latest on New Orleans Tourism</h1>
+<h1>The Latest</h1>
 
 
 <div class="row">
-
     <div class="col-md-12 columns">
-        {% post_most first.0 %}
+        {% post_most first %}
     </div>
 </div>
 
@@ -56,14 +55,29 @@ very simple list of articles
     <div class = "col-md-4 columns"> {% post_more important.2 %} </div>
 </div>
 
-<div class="row top-buffer">
+<h3>The Latest</h3>
+
+<div class="top-buffer">
+
+{% regroup morenews by date_modified|date:"Y-m-d" as morenews_ranked %}
+
+<ul>
+    {% for country in morenews_ranked %}
+    <li>{{ country.grouper }}
     <ul>
-        {% for mp in morenews %}
-            {% post_short mp %}
+        {% for item in country.list %}
+          <li>{% post_short item %}</li>
         {% endfor %}
     </ul>
+    </li>
+    {% endfor %}
+</ul>
 
+{% comment %}
+    {% for mp in morenews %}
+        {% post_short mp %}
+    {% endfor %}
+    {% endcomment %}
 </div>
-
 
 {% endblock %}

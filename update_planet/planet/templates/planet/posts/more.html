@@ -2,6 +2,7 @@
 
 <div class="row">
 
+        {% comment %}  First Column, Picture   {% endcomment %}
 
         <div class="col-md-6 columns">
             {% for enclosure in post.enclosure_set.all %}
@@ -10,19 +11,38 @@
                 {% endif %}
             {% endfor %}
         </div>
+
+        {% comment %}  Second Column  {% endcomment %}
+
         <div class="col-md-6 columns">
-            {% if post.primary_tag %} <h5>{{ post.primary_tag}}</h5> {% endif %}
+
+            {% comment %}  Primary Tag   {% endcomment %}
+
+
+            {% if post.primary_tag %}
+                <h5><span class="label"><a href="{% url 'planet_tag_detail' post.primary_tag %}" title="Tag"> {{ post.primary_tag }} </a></span></h5>
+            {% endif %}
+
+            {% comment %}  Date and Blog  {% endcomment %}
+
+            <h6>
+                <div class="date">{{ post.date_modified|date:"D N g" }}</div>
+                <a href="{{ post.feed.blog.get_absolute_url }}" title="{% trans 'See all posts for this blog' %}">
+                    {{ post.feed.blog.short_name }}
+                </a>
+
+
+            </h6>
+
+            {% comment %}  Title   {% endcomment %}
+
             <h4>
                   <a href="{{ post.url }}" target="_blank" title="{% trans 'Read ' %} {{ post.title|safe }}"
                     onclick="javascript: _gaq.push(['_trackEvent', 'Title Link', 'Click', 'long-content']);">
                     {{ post.title|striptags|safe }}
                 </a>
             </h4>
-            <h6>
-                <div class="date">{{ post.date_modified|date:"M d Y" }}</div> <a href="{{ post.feed.blog.get_absolute_url }}" title="{% trans 'See all posts for this blopg' %}">
-                    {{ post.feed.blog.short_name }}
-                </a>
-            </h6>
+
         </div>
 </div>
 
