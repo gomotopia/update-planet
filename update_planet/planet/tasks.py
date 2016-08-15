@@ -101,6 +101,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
 
     current_site = Site.objects.get(pk=settings.SITE_ID)
 
+
     if create:
         # then create blog, feed, generator, feed links and feed tags
         title = document.feed.get("title", "--")
@@ -111,7 +112,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
 
         try:
             guid = str(md5(document.feed.get("link")).hexdigest())
-        except NameError:
+        except:
             guid = md5(document.feed.get("link").encode('utf-8')).hexdigest()
         image_url = document.feed.get("image", {}).get("href")
         icon_url = document.feed.get("icon")
@@ -137,7 +138,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
             owner = None
 
         blog, created = Blog.objects.get_or_create(
-            url=blog_url, defaults={"title": title}, owner=owner, shortname = urlparse(blog_url).netloc)
+            url=blog_url, defaults={"title": title}, owner=owner, short_name = urlparse(blog_url).netloc)
 
         generator_dict = document.feed.get("generator_detail", {})
 
@@ -162,6 +163,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                            is_active=True, last_checked=datetime.now(),
                            site=current_site, category=category
                            )
+
         planet_feed.save()
 
         for tag_dict in document.feed.get("tags", []):
@@ -188,6 +190,8 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
     else:
         print("Entries total count: {}".format(total_results))
         stop_retrieving = False
+
+
         while (total_results > len(entries)) and not stop_retrieving:
 
             # retrieve and store feed posts
@@ -219,16 +223,16 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                                 comments_url=comments_url, date_modified=date_modified,
                                 feed=planet_feed)
 
-                    '''
-                       Filter post.title HERE!
+                    #   Filter post.title HERE!
 
-                       Create new table of keywords to filter with!
-
-                    '''
-
-
+                    #  Create new table of keywords to filter with!
 
                     # To have the feed entry in the pre_save signal
+
+                    print(" -" * 20)
+                    print(post)
+                    print(" -" * 20)
+
                     post.entry = entry
                     post.save()
                 except PostAlreadyExists:
@@ -302,6 +306,29 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                         )
                         post_enclosure.save()
 
+                    '''
+                    Here, take post content and use beauitful soup to parse out
+                    image, then split on post << for gambit posts >>
+                    '''
+
+                    content_images = BeautifulSoup(post.content,'html.parser')\
+                        .find_all('img')
+
+                    if content_images:
+
+                        for image in content_images:
+                            imgurl= image.get('src')
+                            post_enclosure = Enclosure(
+                                post=post,
+                                mime_type = "image",
+                                link = imgurl
+
+                            )
+                            post_enclosure.save()
+
+                        post.content = post.content.split("\n",1)[1]
+                        post.save()
+
                     # create and store author...
                     author_dict = entry.get("author_detail")
 
@@ -349,7 +376,6 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
             planet_feed.last_modified = datetime.now()
             planet_feed.save()
         print("{} posts were created. Done.".format(new_posts_count))
-
     return new_posts_count
 
 

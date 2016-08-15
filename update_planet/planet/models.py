@@ -275,6 +275,10 @@ class Post(models.Model):
 
     primary_tag = models.ForeignKey("tagging.Tag", null=True)
 
+    # !!!!!!!!!!!!!!!!!!!11
+
+    # CHECK CONTENT FOR IMG SRC
+
     date_modified = models.DateTimeField(_("Date modified"), null=True,
         blank=True, db_index=True)
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
@@ -284,9 +288,12 @@ class Post(models.Model):
     display_order = models.IntegerField(_("Display Order"), default=0)
 
     def save(self):
-        self.age = (datetime.now(pytz.utc) - self.date_modified).days
+        self.age=0
+        # self.age = (datetime.now(pytz.utc) - self.date_modified).days
         self.display_order = self.priority - self.age
         super(Post, self).save()
+
+    # !!!!!!!!!!!!!!!!!!!11
 
     site_objects = PostManager()
     objects = models.Manager()
