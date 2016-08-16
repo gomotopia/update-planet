@@ -80,7 +80,7 @@ def index(request):
 
     '''
 
-    important_posts = Post.site_objects.order_by('-display_order')[:10]
+    important_posts = Post.site_objects.order_by('-date_modified')[:10]
 
     # first
     first = important_posts[0]
