@@ -326,7 +326,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                             )
                             post_enclosure.save()
 
-                        post.content = post.content.split("\n",1)[1]
+                        post.content = post.content.split("\n",1)[1].lstrip()
                         post.save()
 
                     # create and store author...
