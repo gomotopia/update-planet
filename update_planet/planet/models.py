@@ -273,7 +273,7 @@ class Post(models.Model):
     content = models.TextField(_("Content"))
     comments_url = models.URLField(_("Comments URL"), blank=True, null=True)
 
-    primary_tag = models.ForeignKey("tagging.Tag", null=True)
+    primary_tag = models.ForeignKey("tagging.Tag", null=True, required=False)
 
     # !!!!!!!!!!!!!!!!!!!11
 
@@ -407,7 +407,7 @@ class Enclosure(models.Model):
     Stores data contained in feedparser's feed.entries[i].enclosures for a given feed
     """
     post = models.ForeignKey("planet.Post")
-    length = models.CharField(_("Length"), max_length=20)
+    length = models.CharField(_("Length"), max_length=20, required=False)
     mime_type = models.CharField(_("MIME type"), max_length=50, db_index=True)
     link = models.URLField(_("Url"), max_length=500, db_index=True)
 
@@ -438,6 +438,9 @@ class TagInfo(models.Model):
         verbose_name_plural = _("Tag Infos")
         ordering = ("tag", "priority")
         unique_together = ("tag", "priority")
+
+
+    # filter yes/no?
 
     priority =  models.IntegerField(_("Priority"), default=0)
     date_modified = models.DateTimeField(_("Date modified"), null=True,
