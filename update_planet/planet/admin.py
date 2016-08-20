@@ -7,6 +7,8 @@ from planet.models import (Blog, Generator, Feed, FeedLink, Post, PostLink,
 
 from django.contrib.contenttypes.admin import GenericTabularInline
 from tagging.models import TaggedItem, Tag
+from tagging.forms import TagAdminForm
+
 
 class PostLinkAdmin(admin.ModelAdmin):
     list_display = ("title", "rel", "mime_type", "post", "link")
@@ -83,7 +85,6 @@ class GeneratorAdmin(admin.ModelAdmin):
 
 admin.site.register(Generator, GeneratorAdmin)
 
-
 class FeedLinkAdmin(admin.ModelAdmin):
     list_display = ("feed", "mime_type", "rel", "link")
     list_filter = ("mime_type", "rel")
@@ -100,8 +101,53 @@ class TagInfoAdmin(admin.ModelAdmin):
     list_display = ("tag","priority","date_modified","selector")
     readonly_fields = ["tag"]
     list_filter = ["selector"]
-    search_fields = ["tag__name","date_modified"]
+    search_fields = ["tag","date_modified"]
     list_editable = ["selector"]
 
+    '''
+    def get_readonly_fields(self, request, obj=None):
+        if obj: # obj is not None, so this is an edit
+            return ['third_party_id',] # Return a list or tuple of readonly fields' names
+        else: # This is an addition
+            return []
+    '''
+
 admin.site.register(TagInfo, TagInfoAdmin)
+
+class TagInfoInline(admin.TabularInline):
+    model = TagInfo
+    extra = 0
+
+class NewTagAdmin(admin.ModelAdmin):
+    form = TagAdminForm
+
+    '''
+    list_display = ("title", "feed", "guid", "date_created", "date_modified", "primary_tag")
+    list_filter = ("feed", )
+    #  list_filter = ("primary_tag",admin.RelatedOnlyFieldListFilter)
+    search_fields = ["title", "feed__blog__title"]
+    readonly_fields=('age', 'display_order')
+
+    class Media:
+        js = ( '/static/admin/js/dynamic_inlines_with_sort.js',)
+        css = { 'all' : ['/static/admin/css/dynamic_inlines_with_sort.css'], }
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(PostAdmin,self).get_form(request, obj, **kwargs)
+
+        # form class is created per request by modelform_factory function
+        # so it's safe to modify
+        #we modify the the queryset
+        form.base_fields['primary_tag'].queryset = obj.tags
+        return form
+    '''
+admin.site.unregister(Tag)
+admin.site.register(Tag, NewTagAdmin, inlines=[TagInfoInline])
+#    list_editable = ["selector"]
+
+
+
+
+
+
 

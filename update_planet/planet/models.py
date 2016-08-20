@@ -23,9 +23,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.sites.models import Site
 from django.conf import settings
-from django.db.models.signals import pre_delete, post_save
+from django.db.models.signals import pre_delete, pre_init, post_init, pre_save, post_save
 from django.template.defaultfilters import slugify
-from django.dispatch import receiver
+from django.dispatch import dispatcher
 
 # Patch for handle new and old version of django-tagging
 try:
@@ -471,8 +471,9 @@ class TagInfo(models.Model):
     # priority
     # type (name? entity? organization? topic?)
 
-@receiver(post_save, sender=Tag)
 def create_tagInfo(sender, instance, created, **kwargs):
     print(sender, instance, created)
     if created:
         TagInfo.objects.create(tag=instance)
+
+post_save.connect(create_tagInfo, sender=Tag)
