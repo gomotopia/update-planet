@@ -26,7 +26,7 @@ from django.contrib.auth import get_user_model
 from tagging.models import Tag
 
 from planet.models import (Blog, Generator, Feed, FeedLink, Post, PostLink,
-                           Author, PostAuthorData, Enclosure, Category)
+                           Author, PostAuthorData, Enclosure, Category, TagInfo)
 from planet.signals import feeds_updated
 from planet.signals import post_created
 
@@ -44,20 +44,6 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
     """
 
     print("[process_feed] URL={}".format(feed_url))
-
-    def normalize_tag(tag):
-        """
-        converts things like "-noise-" to "noise" and "- noise -" to "noise"
-        """
-        if tag.startswith("-"):
-            tag = tag[1:]
-        if tag.endswith("-"):
-            tag = tag[:-1]
-
-        # fix for HTML entities
-        tag = BeautifulSoup(tag).prettify(formatter="html")
-        tag = tag.strip().lower()
-        return tag
 
     try:
         USER_AGENT = settings.PLANET["USER_AGENT"]
@@ -223,18 +209,8 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                                 comments_url=comments_url, date_modified=date_modified,
                                 feed=planet_feed)
 
-                    #   Filter post.title HERE!
+                    select_matches = post.selectors()
 
-                    #  Create new table of keywords to filter with!
-
-                    # To have the feed entry in the pre_save signal
-
-                    print(" -" * 20)
-                    print(post)
-                    print(" -" * 20)
-
-                    post.entry = entry
-                    post.save()
                 except PostAlreadyExists:
                     print("Skipping post {} ({}) because already exists"
                           .format(guid, url))
@@ -243,126 +219,29 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                         # it finds repeated posts
                         stop_retrieving = True
                 else:
-                    new_posts_count += 1
-                    # create post tags...
-                    for tag_dict in entry.get("tags", []):
-                        tag_name = tag_dict.get(
-                            "term") or tag_dict.get("label")
-                        tag_name = normalize_tag(tag_name)
+                    if select_matches:
+                        print("matches!",select_matches,post.title)
 
-                        if len(tag_name) > 50:
-                            continue
-
-                        try:
-                            if "/" in tag_name:
-                                # For path based categories
-                                for subtag in tag_name.split("/"):
-                                    if subtag:
-                                        # empty string if starts/ends with
-                                        # slash
-                                        Tag.objects.add_tag(
-                                            post, '"%s"' % subtag)
-                            else:
-                                Tag.objects.add_tag(post, '"%s"' % tag_name)
-                        except AttributeError as e:
-                            print("Ignoring tag error: {}".format(e))
-                    # create post links...
-                    for link_dict in entry.get("links", []):
-                        post_link, created = PostLink.objects.get_or_create(
-                            post=post,
-                            rel=link_dict.get("rel", "--"),
-                            mime_type=link_dict.get("type", "text/html"),
-                            link=link_dict.get("href", "--"),
-                            title=link_dict.get("title", "--")
-                        )
-
-                    # create and store enclosures...
-                    if entry.get('media_thumbnail', False):
-                        try:
-                            media_url = entry.get('media_thumbnail').href
-                            media_list = [{"url": media_url}]
-                        except AttributeError:
-                            media_list = entry.get(
-                                'media_thumbnail', [{"url": None}])
-
-                        for media in media_list:
-                            media_url = media["url"]
-                            mime_type, enc = mimetypes.guess_type(
-                                urlparse(media_url).path)
-
-                            post_enclosure, created = Enclosure.objects.get_or_create(
-                                post=post,
-                                length=0,
-                                mime_type=mime_type,
-                                link=media_url
-                            )
-
-                    for enclosure_dict in entry.get("enclosures", []):
-                        post_enclosure = Enclosure(
-                            post=post,
-                            length=enclosure_dict.get("length", 0),
-                            mime_type=enclosure_dict.get("type", ""),
-                            link=enclosure_dict.get("href")
-                        )
-                        post_enclosure.save()
-
-                    '''
-                    Here, take post content and use beauitful soup to parse out
-                    image, then split on post << for gambit posts >>
-                    '''
-
-                    content_images = BeautifulSoup(post.content,'html.parser')\
-                        .find_all('img')
-
-                    if content_images:
-
-                        for image in content_images:
-                            imgurl= image.get('src')
-                            post_enclosure = Enclosure(
-                                post=post,
-                                mime_type = "image",
-                                link = imgurl
-
-                            )
-                            post_enclosure.save()
-
-                        post.content = post.content.split("\n",1)[1].lstrip()
+                        post.entry = entry
                         post.save()
 
-                    # create and store author...
-                    author_dict = entry.get("author_detail")
+                        print(" -" * 20)
+                        print(post)
+                        print(" -" * 20)
 
-                    if author_dict:
-                        author, created = Author.objects.get_or_create(
-                            name=author_dict.get("name", ""),
-                            email=author_dict.get("email", ""),
-                            profile_url=author_dict.get("href")
-                        )
-                        try:
-                            PostAuthorData.objects.get(
-                                author=author, post=post)
-                        except PostAuthorData.DoesNotExist:
-                            pad = PostAuthorData(author=author, post=post)
-                            pad.save()
+                        new_posts_count += 1
 
-                    # create and store contributors...
-                    for contributor_dict in entry.get("contributors", []):
-                        contributor, created = Author.objects.get_or_create(
-                            name=author_dict.get("name", ""),
-                            email=author_dict.get("email", ""),
-                            profile_url=contributor_dict.get("href")
-                        )
-                        try:
-                            PostAuthorData.objects.get(
-                                author=contributor, post=post)
-                        except PostAuthorData.DoesNotExist:
-                            pad = PostAuthorData(author=contributor, post=post,
-                                                 is_contributor=True)
-                            pad.save()
+                        make_entry_tags(entry, post)
+                        make_selector_tags(select_matches, post)
+                        make_links(entry, post)
+                        make_enclosures(entry, post)
+                        check_content_images(post)
+                        make_author_contributors(entry, post)
+                        # remove unwanted tags
 
-                    # We send a post_created signal
-                    print('post_created.send(sender=post)', post)
-                    post_created.send(sender=post, instance=post)
+                        # We send a post_created signal
+                        print('post_created.send(sender=post)', post)
+                        post_created.send(sender=post, instance=post)
 
             if not stop_retrieving:
                 opensearch_url = "{}?start-index={}&max-results={}".format(
@@ -377,7 +256,6 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
             planet_feed.save()
         print("{} posts were created. Done.".format(new_posts_count))
     return new_posts_count
-
 
 @task(ignore_results=True)
 def update_feeds():
@@ -398,3 +276,144 @@ def update_feeds():
         print("Done!")
 
     feeds_updated.send(sender=None, instance=None)
+
+############## Add Tags and Make functions ###############
+
+def add_tag_name(post,tag_name):
+    try:
+        if "/" in tag_name:
+            # For path based categories
+            for subtag in tag_name.split("/"):
+                if subtag:
+                    # empty string if starts/ends with
+                    # slash
+                    Tag.objects.add_tag(
+                        post, '"%s"' % subtag)
+        else:
+            Tag.objects.add_tag(post, '"%s"' % tag_name)
+    except AttributeError as e:
+        print("Ignoring tag error: {}".format(e))
+# create post links...
+
+def make_entry_tags(entry, post):
+
+    for tag_dict in entry.get("tags", []):
+        tag_name = tag_dict.get(
+            "term") or tag_dict.get("label")
+        tag_name = normalize_tag(tag_name)
+        if len(tag_name) <= 50:
+            add_tag_name(post,tag_name)
+
+def make_selector_tags(select_matches, post):
+    for selTag in select_matches:
+        Tag.objects.add_tag(post,selTag.name)
+
+def make_links(entry, post):
+
+    # links
+    for link_dict in entry.get("links", []):
+        post_link, created = PostLink.objects.get_or_create(
+            post=post,
+            rel=link_dict.get("rel", "--"),
+            mime_type=link_dict.get("type", "text/html"),
+            link=link_dict.get("href", "--"),
+            title=link_dict.get("title", "--")
+        )
+
+def make_enclosures(entry, post):
+
+    # create and store enclosures...
+    if entry.get('media_thumbnail', False):
+        try:
+            media_url = entry.get('media_thumbnail').href
+            media_list = [{"url": media_url}]
+        except AttributeError:
+            media_list = entry.get(
+                'media_thumbnail', [{"url": None}])
+
+        for media in media_list:
+            media_url = media["url"]
+            mime_type, enc = mimetypes.guess_type(
+                urlparse(media_url).path)
+
+            post_enclosure, created = Enclosure.objects.get_or_create(
+                post=post,
+                length=0,
+                mime_type=mime_type,
+                link=media_url
+            )
+
+    for enclosure_dict in entry.get("enclosures", []):
+        post_enclosure = Enclosure(
+            post=post,
+            length=enclosure_dict.get("length", 0),
+            mime_type=enclosure_dict.get("type", ""),
+            link=enclosure_dict.get("href")
+        )
+        post_enclosure.save()
+
+def check_content_images(post):
+
+    content_images = BeautifulSoup(post.content,'html.parser')\
+        .find_all('img')
+    if content_images:
+        for image in content_images:
+            imgurl= image.get('src')
+            post_enclosure = Enclosure(
+                post=post,
+                mime_type = "image",
+                link = imgurl
+
+            )
+            post_enclosure.save()
+        post.content = post.content.split("\n",1)[1].lstrip()
+        post.save()
+
+def make_author_contributors(entry, post):
+
+    # create and store author...
+    author_dict = entry.get("author_detail")
+
+    if author_dict:
+        author, created = Author.objects.get_or_create(
+            name=author_dict.get("name", ""),
+            email=author_dict.get("email", ""),
+            profile_url=author_dict.get("href")
+        )
+        try:
+            PostAuthorData.objects.get(
+                author=author, post=post)
+        except PostAuthorData.DoesNotExist:
+            pad = PostAuthorData(author=author, post=post)
+            pad.save()
+
+    # create and store contributors...
+    for contributor_dict in entry.get("contributors", []):
+        contributor, created = Author.objects.get_or_create(
+            name=author_dict.get("name", ""),
+            email=author_dict.get("email", ""),
+            profile_url=contributor_dict.get("href")
+        )
+        try:
+            PostAuthorData.objects.get(
+                author=contributor, post=post)
+        except PostAuthorData.DoesNotExist:
+            pad = PostAuthorData(author=contributor, post=post,
+                                 is_contributor=True)
+            pad.save()
+
+############## normalize tag
+
+def normalize_tag(tag):
+    """
+    converts things like "-noise-" to "noise" and "- noise -" to "noise"
+    """
+    if tag.startswith("-"):
+        tag = tag[1:]
+    if tag.endswith("-"):
+        tag = tag[:-1]
+
+    # fix for HTML entities
+    tag = BeautifulSoup(tag).prettify(formatter="html")
+    tag = tag.strip().lower()
+    return tag

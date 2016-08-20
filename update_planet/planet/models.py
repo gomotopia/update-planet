@@ -23,8 +23,9 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.sites.models import Site
 from django.conf import settings
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, post_save
 from django.template.defaultfilters import slugify
+from django.dispatch import receiver
 
 # Patch for handle new and old version of django-tagging
 try:
@@ -37,7 +38,6 @@ from tagging.models import Tag, TaggedItem
 from planet.managers import (FeedManager, AuthorManager, BlogManager,
     PostManager, GeneratorManager, PostLinkManager, FeedLinkManager,
     EnclosureManager)
-
 
 def _get_user_model():
     try:
@@ -273,11 +273,7 @@ class Post(models.Model):
     content = models.TextField(_("Content"))
     comments_url = models.URLField(_("Comments URL"), blank=True, null=True)
 
-    primary_tag = models.ForeignKey("tagging.Tag", null=True, required=False)
-
-    # !!!!!!!!!!!!!!!!!!!11
-
-    # CHECK CONTENT FOR IMG SRC
+    primary_tag = models.ForeignKey("tagging.Tag", null=True, blank=True)
 
     date_modified = models.DateTimeField(_("Date modified"), null=True,
         blank=True, db_index=True)
@@ -293,7 +289,17 @@ class Post(models.Model):
         self.display_order = self.priority - self.age
         super(Post, self).save()
 
-    # !!!!!!!!!!!!!!!!!!!11
+    def selectors(self):
+        # collect all selected tags
+        # for each tag ask if in content or title
+
+        searchSet = ' '.join([tag.name for tag in self.tags])
+        searchSet += ' ' + self.content + ' ' + self.title #make its own method 'all to text'
+        selectedTags = []
+        for selectTInfo in TagInfo.objects.filter(selector=True):
+            if selectTInfo.tag.name in searchSet:
+                selectedTags.append(selectTInfo.tag)
+        return selectedTags
 
     site_objects = PostManager()
     objects = models.Manager()
@@ -323,6 +329,7 @@ register(Post)
 # Deleting all asociated tags.
 def delete_asociated_tags(sender, **kwargs):
     Tag.objects.update_tags(kwargs['instance'], None)
+
 pre_delete.connect(delete_asociated_tags, sender=Post)
 
 
@@ -407,7 +414,7 @@ class Enclosure(models.Model):
     Stores data contained in feedparser's feed.entries[i].enclosures for a given feed
     """
     post = models.ForeignKey("planet.Post")
-    length = models.CharField(_("Length"), max_length=20, required=False)
+    length = models.CharField(_("Length"), max_length=20, blank=True)
     mime_type = models.CharField(_("MIME type"), max_length=50, db_index=True)
     link = models.URLField(_("Url"), max_length=500, db_index=True)
 
@@ -431,6 +438,7 @@ class TagInfo(models.Model):
         Tag,
         on_delete=models.CASCADE,
         primary_key=True,
+        editable = False
     )
 
     class Meta:
@@ -442,21 +450,29 @@ class TagInfo(models.Model):
 
     # filter yes/no?
 
+    selector = models.BooleanField(_("Filters Posts"), default=False)
     priority =  models.IntegerField(_("Priority"), default=0)
     date_modified = models.DateTimeField(_("Date modified"), null=True,
         blank=True, db_index=True)
     age =  age = models.IntegerField(_("Age"), default=0)
     display_order = models.IntegerField(_("Display Order"), default=0)
 
-    def save(self):
-        self.date_modified = TaggedItem.objects.get_by_model(Post, self.tag) \
-            .order_by('-date_modified')[0].date_modified
-        self.age = (datetime.now(pytz.utc) - self.date_modified).days
-        self.display_order = self.priority - self.age
-        super(TagInfo, self).save()
 
+    '''
+    def save(self):
+        # self.date_modified = TaggedItem.objects.get_by_model(Post, self.tag) \
+        #    .order_by('-date_modified')[0].date_modified
+        # self.age = (datetime.now(pytz.utc) - self.date_modified).days
+        # self.display_order = self.priority - self.age
+        super(TagInfo, self).save()
+    '''
 
     # color
     # priority
     # type (name? entity? organization? topic?)
 
+@receiver(post_save, sender=Tag)
+def create_tagInfo(sender, instance, created, **kwargs):
+    print(sender, instance, created)
+    if created:
+        TagInfo.objects.create(tag=instance)

@@ -21,7 +21,6 @@ class PostAuthorDataAdmin(admin.ModelAdmin):
 
 admin.site.register(PostAuthorData, PostAuthorDataAdmin)
 
-
 class EnclosureAdmin(admin.ModelAdmin):
     list_display = ("post", "mime_type", "length", "link")
     list_filter = ("mime_type", )
@@ -98,8 +97,11 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 
 class TagInfoAdmin(admin.ModelAdmin):
-    list_display = ("tag","priority","date_modified")
-    search_fields = ["tag","date_modified"]
+    list_display = ("tag","priority","date_modified","selector")
+    readonly_fields = ["tag"]
+    list_filter = ["selector"]
+    search_fields = ["tag__name","date_modified"]
+    list_editable = ["selector"]
 
 admin.site.register(TagInfo, TagInfoAdmin)
 
