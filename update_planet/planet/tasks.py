@@ -34,7 +34,6 @@ from planet.signals import post_created
 class PostAlreadyExists(Exception):
     pass
 
-
 @task(ignore_results=True)
 def process_feed(feed_url, owner_id=None, create=False, category_title=None):
     """
@@ -219,7 +218,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                         # it finds repeated posts
                         stop_retrieving = True
                 else:
-                    if select_matches:
+                    if (select_matches or not TagInfo.objects.filter(selector=True)):
                         print("matches!",select_matches,post.title)
 
                         post.entry = entry

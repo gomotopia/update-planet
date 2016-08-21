@@ -475,3 +475,11 @@ def create_tagInfo(sender, instance, created, **kwargs):
         TagInfo.objects.create(tag=instance)
 
 post_save.connect(create_tagInfo, sender=Tag)
+
+def destroy_tagInfo(sender, instance, **kwargs):
+    try:
+        TagInfo.objects.get(tag=instance).delete()
+    except:
+        pass
+
+pre_delete.connect(destroy_tagInfo, sender=Tag)
