@@ -320,9 +320,6 @@ class Post(models.Model):
     def get_slug(self):
         return slugify(self.title) or "no-title"
 
-
-
-
 # each Post object now will have got a .tags attribute!
 register(Post)
 
@@ -451,6 +448,7 @@ class TagInfo(models.Model):
     # filter yes/no?
 
     selector = models.BooleanField(_("Filters Posts"), default=False)
+    ignore = models.BooleanField(_("Ignore this Tag"), default=False)
     priority =  models.IntegerField(_("Priority"), default=0)
     date_modified = models.DateTimeField(_("Date modified"), null=True,
         blank=True, db_index=True)

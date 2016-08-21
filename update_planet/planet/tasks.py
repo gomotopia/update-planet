@@ -237,7 +237,6 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                         make_enclosures(entry, post)
                         check_content_images(post)
                         make_author_contributors(entry, post)
-                        # remove unwanted tags
 
                         # We send a post_created signal
                         print('post_created.send(sender=post)', post)
@@ -305,8 +304,12 @@ def make_entry_tags(entry, post):
             add_tag_name(post,tag_name)
 
 def make_selector_tags(select_matches, post):
-    for selTag in select_matches:
-        Tag.objects.add_tag(post,selTag.name)
+
+    selecttags = [tag.name for tag in select_matches]
+    ignoretags = [taginfo.tag.name for taginfo in TagInfo.objects.filter(ignore=True)]
+    posttags = [tag.name for tag in post.tags]
+    finaltags = list(set(posttags) -set(ignoretags) | set(selecttags))
+    Tag.objects.update_tags(post, " ".join(["\"%s\""%(term) for term in finaltags]))
 
 def make_links(entry, post):
 

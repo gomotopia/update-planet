@@ -98,11 +98,11 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 
 class TagInfoAdmin(admin.ModelAdmin):
-    list_display = ("tag","priority","date_modified","selector")
+    list_display = ("tag","selector","ignore")
     readonly_fields = ["tag"]
-    list_filter = ["selector"]
+    list_filter = ["selector","ignore"]
     search_fields = ["tag","date_modified"]
-    list_editable = ["selector"]
+    list_editable = ["selector","ignore"]
 
     '''
     def get_readonly_fields(self, request, obj=None):
