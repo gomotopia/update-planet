@@ -2,7 +2,7 @@
 {% load i18n pagination_tags  %}
 {% url 'planet_blog_list' %}
 
-{% block head_title %}{% trans "Blogs list" %}{% endblock %}
+{% block head_title %}{% trans "Sources" %}{% endblock %}
 
 {% block extra_head %}
     <meta name="title" content="{% trans 'Blogs list' %} " />
@@ -10,12 +10,12 @@
     <meta name="robots" content="noindex, follow" />
 {% endblock %}
 
-{% block breadcrumb_section %}<li class="active">{% trans 'Blogs' %}</li>{% endblock %}
+{% block breadcrumb_section %}<li class="active">Sources</li>{% endblock %}
 
 {% block blogs_class %}class="active"{% endblock %}
 
 {% block content %}
-    <h1>{% trans "Blogs" %}</h1>
+    <h1>Sources</h1>
     {% autopaginate blogs_list 50 %}
       {% for blog in blogs_list %}
         <div class="panel panel-success">

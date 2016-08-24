@@ -368,6 +368,11 @@ def check_content_images(post):
 
             )
             post_enclosure.save()
+
+        '''
+        content_images = BeautifulSoup(post.content,'html.parser')\
+            .find_all('iframe')
+        '''
         post.content = post.content.split("\n",1)[1].lstrip()
         post.save()
 

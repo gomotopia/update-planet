@@ -19,7 +19,7 @@
 {% block posts_class %}class="active"{% endblock %}
 
 {% block content %}
-    <h1>{% trans "Recent Posts on New Orleans Tourism and related topics" %}</h1>
+    <h1>Recent Posts</h1>
     {% autopaginate posts 15 %}
     {% for post in posts %}
         <div class="post">
