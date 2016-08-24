@@ -20,9 +20,18 @@
 {% endblock %}
 
 {% block right_column %}
+
+    {% get_selector_tagInfos as selector_tagInfos %}
+    <h4>Popular Topics</h4>
+    {% for tagInfo in selector_tagInfos %}
+      <span class="label"><a href="{% url 'planet_tag_detail' tagInfo.tag.name %}" title="Tag">{{ tagInfo.tag.name }}</a></span> <br/>
+    {% endfor %}
+
+
+    {% comment %}
     {% include 'planet/feeds/blocks/syndication_block.html' %}
     {% tag_cloud_for_model planet.Post as tags_cloud with steps=7 min_count=5 distribution=log %}
-    {% include 'planet/tags/blocks/cloud.html' %}
+    {% include 'planet/tags/blocks/cloud.html' %}{% endcomment %}
 {% endblock %}
 
 {% block footer %}

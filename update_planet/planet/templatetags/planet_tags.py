@@ -13,7 +13,7 @@ from django.utils.safestring import mark_safe
 from django.utils.text import smart_split
 from django.utils.translation import ugettext as _
 
-from planet.models import Author, Feed, Blog, Post
+from planet.models import Author, Feed, Blog, Post, TagInfo
 from planet.settings import PLANET_CONFIG
 
 from tagging.models import Tag, TaggedItem
@@ -21,6 +21,14 @@ from tagging.models import Tag, TaggedItem
 
 register = template.Library()
 
+############## my tags
+
+@register.simple_tag
+def get_selector_tagInfos():
+    selector_taginfos = TagInfo.objects.filter(selector=True)
+    return selector_taginfos
+
+###############
 
 @register.inclusion_tag('planet/authors/blocks/list_for_tag.html')
 def authors_about(tag):
@@ -94,14 +102,6 @@ def post_more(post):
 def post_short(post):
     """
     Displays small picture and primary tag, headline, source, date
-    """
-    return {"post": post}
-
-@register.inclusion_tag("planet/posts/most.html")
-def post_most(post):
-    """
-    Displays full info about a post: title, date, feed, authors and tags,
-    and it also displays external links to post and blog.
     """
     return {"post": post}
 
