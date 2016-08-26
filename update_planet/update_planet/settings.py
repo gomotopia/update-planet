@@ -25,7 +25,7 @@ SECRET_KEY = 'dsqbzbe!s=nh8br*v-0gtq&)(j@_^@#89sz*fvgmf-73n_s!dz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['nolaupdate.pythonanywhere.com']
+ALLOWED_HOSTS = ['nolaupdate.pythonanywhere.com, www.nolaupdate.com']
 
 SITE_ID = 1
 
