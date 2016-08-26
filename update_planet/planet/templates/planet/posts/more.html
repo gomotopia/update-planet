@@ -4,17 +4,23 @@
 
         {% comment %}  First Column, Picture   {% endcomment %}
 
-        <div class="col-md-6 columns">
-            {% for enclosure in post.enclosure_set.all %}
-                {% if "image" in enclosure.mime_type %}
-                    <img src="{{ enclosure.link }}" alt="" /></a>
-                {% endif %}
-            {% endfor %}
-        </div>
 
-        {% comment %}  Second Column  {% endcomment %}
+        {% if post.enclosure_set.all %}
+
+            <div class="col-md-6 columns">
+                {% for enclosure in post.enclosure_set.all %}
+                    {% if "image" in enclosure.mime_type %}
+                        <img src="{{ enclosure.link }}" alt="" /></a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            {% comment %}  Second Column  {% endcomment %}
 
         <div class="col-md-6 columns">
+        {% else %}
+        <div class="col-md-12 columns">
+        {% endif %}
 
             {% comment %}  Primary Tag   {% endcomment %}
 

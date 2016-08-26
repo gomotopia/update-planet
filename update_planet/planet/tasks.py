@@ -29,7 +29,7 @@ from planet.models import (Blog, Generator, Feed, FeedLink, Post, PostLink,
                            Author, PostAuthorData, Enclosure, Category, TagInfo)
 from planet.signals import feeds_updated
 from planet.signals import post_created
-
+from planet.settings import PLANET_CONFIG
 
 class PostAlreadyExists(Exception):
     pass
@@ -218,7 +218,7 @@ def process_feed(feed_url, owner_id=None, create=False, category_title=None):
                         # it finds repeated posts
                         stop_retrieving = True
                 else:
-                    if (select_matches or not TagInfo.objects.filter(selector=True)):
+                    if (select_matches or not PLANET_CONFIG["FILTER_WITH_SELECTORS"]):
                         print("matches!",select_matches,post.title)
 
                         post.entry = entry

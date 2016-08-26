@@ -26,7 +26,6 @@ register = template.Library()
 @register.simple_tag
 def get_selector_tagInfos():
     selector_taginfos = TagInfo.objects.filter(selector=True)
-    return selector_taginfos
 
 ###############
 
