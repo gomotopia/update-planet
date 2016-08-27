@@ -68,7 +68,8 @@ class PostAdmin(admin.ModelAdmin):
         # form class is created per request by modelform_factory function
         # so it's safe to modify
         #we modify the the queryset
-        form.base_fields['primary_tag'].queryset = obj.tags
+        if obj:
+            form.base_fields['primary_tag'].queryset = obj.tags
         return form
 
 admin.site.register(Post, PostAdmin, inlines=[TaggedItemInline,EnclosureInline])

@@ -13,6 +13,8 @@ from django.http import Http404
 from planet.models import Blog, Feed, Author, Post
 from planet.forms import SearchForm
 
+from datetime import timedelta
+
 from tagging.models import Tag, TaggedItem
 
 
@@ -79,8 +81,8 @@ def index(request):
         design and use: taginfo
 
     '''
-
-    important_posts = Post.site_objects.order_by('-date_modified')[:10]
+    unsorted_results = Post.site_objects.order_by('-date_modified')[:20]
+    important_posts = sorted(unsorted_results, key= lambda p: p.date_modified + timedelta(days=p.priority), reverse=True )
 
     # first
     first = important_posts[0]

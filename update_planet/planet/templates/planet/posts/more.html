@@ -32,7 +32,7 @@
             {% comment %}  Date and Blog  {% endcomment %}
 
             <h6>
-                <div class="date">{{ post.date_modified|date:"D N g" }}</div>
+                <div class="date">{{ post.date_modified|date:"D M j" }}</div>
                 <a href="{{ post.feed.blog.get_absolute_url }}" title="{% trans 'See all posts for this blog' %}">
                     {{ post.feed.blog.short_name }}
                 </a>

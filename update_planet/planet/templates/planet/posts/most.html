@@ -24,7 +24,7 @@
             {% if post.primary_tag %}
                     <h4><span class="label"><a href="{% url 'planet_tag_detail' post.primary_tag %}" title="Tag"> {{ post.primary_tag }} </a></span></h4>
             {% endif %}
-            <h5><div class="date">{{ post.date_modified|date:"D N g" }}</div></h5>
+            <h5><div class="date">{{ post.date_modified|date:"D M j" }}</div></h5>
             <h3>
                 <a href="{{ post.url }}" target="_blank" title="{% trans 'Read ' %} {{ post.title|safe }}"
                     onclick="javascript: _gaq.push(['_trackEvent', 'Title Link', 'Click', 'long-content']);">
